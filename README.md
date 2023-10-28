@@ -72,7 +72,7 @@
 <!-- LIVE DEMO -->
 ### Live demo 
 
-Here is a live [demo](https://onrent.onrender.com) of the application
+Here is a live [demo](https://budgetapp-y18o.onrender.com/) of the application
 
 ### Video presentation
 Here is the link to the video presentation of the [project](https://www.loom.com/share/8a9ef8018e594c3dab967c73e84ef925?sid=462869a3-a286-4dd7-b5a1-3cc498f3b281)
