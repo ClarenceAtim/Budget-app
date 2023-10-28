@@ -1,23 +1,22 @@
 require 'rails_helper'
 
 RSpec.describe Category, type: :model do
-  let(:user) { User.create(name: 'kiko', email: 'kiko@gmail.com') }
-
-  it 'should have an integer user_id' do
-    category = Category.new(user_id: user.id, name: 'food', icon: 'icon')
-    category.user_id = nil
-    expect(category).to_not be_valid
+  let(:category) { create(:category) }
+  it 'validity' do
+    expect(category).to be_valid
   end
 
-  it 'name should be presence ' do
-    category = Category.new(user_id: user.id, name: 'food', icon: 'icon')
-    category.name = nil
-    expect(category).to_not be_valid
+  it 'has a name' do
+    category.name = ''
+    expect(category).not_to be_valid
   end
 
-  it 'icon should be presence ' do
-    category = Category.new(user_id: user.id, name: 'food', icon: 'icon')
-    category.icon = nil
-    expect(category).to_not be_valid
+  it 'has a user associated' do
+    category.user = nil
+    expect(category).not_to be_valid
+  end
+
+  it 'associated user is valid' do
+    expect(category.user).to be_valid
   end
 end

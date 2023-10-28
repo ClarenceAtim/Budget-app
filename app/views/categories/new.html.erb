@@ -1,23 +1,9 @@
-<section class="category-section">
-    <div>
-        <%= render "shared/head", title: "add category", back: true %>
-    </div>
-    <% if flash[:notice].present? %>
-        <div class="notice">
-            <%= flash[:notice] %>
-        </div>
-    <% end %>
+<div class="navigation py-6 px-3 blue-nav-white-text">
+  <ul class="flex justify-between items-center">
+    <li class="w-10"><%= link_to image_tag('backarrow.png', alt: 'Back'), categories_path, class: 'nav-link' %></li>
+    <h2><strong>New category</strong></h2>
+    <li><%= link_to 'Sign Out', destroy_user_session_path, data: { turbo_method: :delete }, class: "nav-link" %></li>
+  </ul>
+</div>
 
-    <div class="form-container">
-        <%= form_with model: @category do |form| %>
-            <div class="border p-3 p-md-5">
-                <%= form.text_field :name, required: true, placeholder: "Enter New Category", class: 'form-control' %>
-                <%= form.select :icon, options_for_select(@options, selected: @category.icon), { prompt: "Select an icon" }, class: 'form-select mb-3' %>
-            </div>
-
-            <div class="add-category-container d-flex justify-content-center px-3 px-md-5 py-3 py-md-5">
-                <%= form.submit "Create category", class: 'btn btn-primary btn-lg w-80' %>
-            </div>
-        <% end %>
-    </div>
-</section>
+<%= render "form", category: @category %>

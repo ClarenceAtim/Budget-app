@@ -1,19 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe 'User model ' do
-    subject { User.new(name: 'kiko', email: 'kiko@gmail.com') }
+  let(:user) { create(:user) }
+  it 'validity' do
+    expect(user).to be_valid
+  end
 
-    before { subject.save }
-
-    it ' name must not be blank' do
-      subject.name = nil
-      expect(subject).to_not be_valid
-    end
-
-    it ' name must be at least two and not greater than 50' do
-      subject.name = 'a' * 250
-      expect(subject).to_not be_valid
-    end
+  it 'has a name' do
+    user.name = ''
+    expect(user).not_to be_valid
   end
 end

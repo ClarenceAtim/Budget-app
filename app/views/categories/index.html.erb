@@ -1,55 +1,37 @@
-<section class="category-section">
-  <div class="category-container">
-    <%= render "shared/head", title: 'categories', back: false %>
-    <div class="success-fail">
-      <% if flash[:notice] %>
-        <%= render 'shared/message', message: flash[:notice], status: 'success' %>
-      <% end %>
-
-      <% if flash[:alert] %>
-        <%= render 'shared/message', message: flash[:alert], status: 'danger' %>
-      <% end %>
-    </div>
-
-    <% if @categories.empty? %>
-      <div class="w-100  d-flex justify-content-center align-items-center">
-        <div class="getting-started-container w-100 p-3 p-md-5">
-          <h2 class="text-center">Getting Started?</h2>
-          <div class="introduction my-3 my-md-5">
-            <p>A mobile web application where you can manage your budget: you have a list of transactions associated with a category,
-              so that you can see how much money you spent and on what.</p>
-          </div>
-          <div class="for-category my-3 my-md-5">
-            <h2>Category</h2>
-            <p>
-              For each category, the user can see their name, icon and the total amount of all the transactions that belong to that category.
-              When the user clicks (or taps) on a category item, the application navigates to the transactions page for that category.
-              There is a button "add a new category" at the bottom that brings the user to the page to create a new category.
-            </p>
-          </div>
-          <div class="for-expense my-3 my-md-5">
-            <h2>Expense</h2>
-            <p>
-              Here, you can view and manage transactions in a specific category. The total category amount is displayed at the top. To add a new transaction, scroll down and click "Add a New Transaction." Use the "<" button to return to the home page. Enjoy!
-            </p>
-          </div>
-        </div>
-      </div>
-    <% else %>
-      <ul class="list-group mt-5 category-container bg-light">
-        <% @categories.each do |category| %>
-          <%= link_to category_expenses_path(category_id: category.id), class: 'list-group-item list-group-item-action d-flex justify-content-between align-items-center mb-3' do %>
-            <div class="text-4xl me-2 me-md-4"><%= category.icon %></div>
-            <div class="text-lg font-weight-bold"><%= category.name %></div>
-            <div class="text-lg font-weight-bold">$<%= format('%.2f', category.expenses.sum(:amount)) %></div>
-          <% end %>
-        <% end %>
+<div class="flex flex-col h-screen justify-between">
+  <div>
+    <div class="navigation py-6 px-3 blue-nav-white-text">
+      <ul class="flex justify-between items-center">
+        <li class="w-10">
+          <%= link_to image_tag('backarrow.png', alt: 'Back'), root_path, class: 'nav-link' %>
+        </li>
+        <h2><strong>Categories</strong></h2>
+        <li>
+          <%= link_to 'Sign Out', destroy_user_session_path, data: { turbo_method: :delete }, class: "nav-link" %>
+        </li>
       </ul>
-    <% end %>
-<div class="mt-auto">
-      <div class="add-category-container d-flex justify-content-center px-3 px-md-5 py-3">
-        <%= link_to "ADD CATEGORY", new_category_path, class: 'btn btn-outline-light btn-lg' %>
-      </div>
     </div>
+
+    <section class="">
+      <p class="text-green-500"><%= notice %></p>
+
+      <div id="categories">
+        <% @categories.each do |category| %>
+          <a href="<%= category_path(category) %>" class="space-y-1 mt-1 border-gray-400">
+            <%= render category %>
+          </a>
+        <% end %>
+      </div>
+    </section>
   </div>
-</section>
+
+  <section class="text-center">
+    <%= link_to new_category_path do %>
+      <div class="w-full bg-lime-600 flex text-white">
+        <button class="font-bold p-2 py-4 m-4 text-lg w-full border-2 bg-lime-600 rounded hover:bg-lime-500 focus:outline-none focus:bg-lime-500">
+          Add a New Category 
+        </button>
+      </div>
+    <% end %>
+  </section>
+</div>
