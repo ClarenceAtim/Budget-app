@@ -1,62 +1,41 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, only: %i[show edit update destroy]
-  load_and_authorize_resource through: :current_user
-  # GET /categories or /categories.json
+  before_action :authenticate_user!, except: [:splash]
+
+  ICON_OPTIONS = ['🍔', '🛒', '🚗', '🐶', '📚', '💻', '🎁', '🏠', '🏥', '🎬', '👔', '🎓'].freeze
+
   def index
-    @categories = current_user.categories
+    @categories = current_user.categories.includes(:expenses)
   end
 
   def new
     @category = Category.new
+    @options = ICON_OPTIONS
   end
 
-  # POST /categories or /categories.json
   def create
-    @category = current_user.categories.build(category_params)
+    icon = categories_params[:icon].presence || ICON_OPTIONS.first
 
-    respond_to do |format|
-      if @category.save
-        format.html { redirect_to categories_path, notice: 'Category was successfully created.' }
-        format.json { render :show, status: :created, location: @category }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @category.errors, status: :unprocessable_entity }
-      end
+    @category = current_user.categories.build(categories_params.merge(icon:))
+
+    if @category.save
+      redirect_to categories_path, notice: 'Expense category was successfully created.'
+    else
+      flash.now[:alert] = 'Try again. Cannot create a new expense category.'
+      render :new
     end
   end
 
-  # PATCH/PUT /categories/1 or /categories/1.json
-  def update
-    respond_to do |format|
-      if @category.update(category_params)
-        format.html { redirect_to category_url(@category), notice: 'Category was successfully updated.' }
-        format.json { render :show, status: :ok, location: @category }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @category.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  def splash; end
 
-  # DELETE /categories/1 or /categories/1.json
   def destroy
+    @category = current_user.categories.find(params[:id])
     @category.destroy
-
-    respond_to do |format|
-      format.html { redirect_to categories_url, notice: 'Category was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to categories_path, alert: 'Expense category deleted successfully.'
   end
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_category
-    @category = Category.find(params[:id])
-  end
-
-  # Only allow a list of trusted parameters through.
-  def category_params
-    params.require(:category).permit(:name, :icon)
+  def categories_params
+    params.require(:category).permit(:name, :icon).merge(user_id: current_user.id)
   end
 end

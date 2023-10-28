@@ -3,12 +3,8 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  has_many :expenditures, foreign_key: :author_id
-  has_many :categories, foreign_key: :author_id
+  has_many :categories, dependent: :destroy
+  has_many :expenses, dependent: :destroy
 
-  validates :name, presence: true
-
-  def admin?
-    role == 'admin'
-  end
+  validates :name, presence: true, allow_blank: false, length: { minimum: 2, maximum: 50 }
 end
